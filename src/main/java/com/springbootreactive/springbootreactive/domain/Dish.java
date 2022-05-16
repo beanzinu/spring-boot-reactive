@@ -1,6 +1,9 @@
 package com.springbootreactive.springbootreactive.domain;
 
+import org.springframework.data.annotation.Id;
+
 public class Dish {
+    private @Id String id;
     private String description;
     private boolean delivered = false;
 
