@@ -18,7 +18,7 @@ public class ItemService {
 
     // Example 쿼리 예제
     public Flux<Item> searchByExample(String name, String description, boolean useAnd){
-        Item item = new Item(name,description,0.0);
+        Item item = new Item("item1",name,description,0.0);
 
         ExampleMatcher matcher = (useAnd
             ? ExampleMatcher.matchingAll() //

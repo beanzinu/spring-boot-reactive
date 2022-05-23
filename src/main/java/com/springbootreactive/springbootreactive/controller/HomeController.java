@@ -6,6 +6,7 @@ import com.springbootreactive.springbootreactive.domain.Item;
 import com.springbootreactive.springbootreactive.repository.CartRepository;
 import com.springbootreactive.springbootreactive.repository.ItemRepository;
 import com.springbootreactive.springbootreactive.service.CartService;
+import com.springbootreactive.springbootreactive.service.InventoryService;
 import com.springbootreactive.springbootreactive.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,20 +24,22 @@ public class HomeController {
     private CartRepository cartRepository;
     private CartService cartService;
     private ItemService itemService;
+    private InventoryService inventoryService;
 
-    public HomeController(ItemRepository itemRepository, CartRepository cartRepository, CartService cartService, ItemService itemService) {
+    public HomeController(ItemRepository itemRepository, CartRepository cartRepository, CartService cartService, ItemService itemService,InventoryService inventoryService) {
         this.itemRepository = itemRepository;
         this.cartRepository = cartRepository;
         this.cartService = cartService;
         this.itemService = itemService;
+        this.inventoryService = inventoryService;
     }
 
-    @GetMapping
+    @GetMapping("/")
     Mono<Rendering> home() {
         return Mono.just(Rendering.view("home.html")
-                .modelAttribute("items",this.itemRepository.findAll()
+                .modelAttribute("items",this.inventoryService.getInventory()
                 )
-                .modelAttribute("cart",this.cartRepository.findById("My Cart")
+                .modelAttribute("cart",this.inventoryService.getCart("My Cart")
                 .defaultIfEmpty(new Cart("My Cart")))
                 .build());
     }
