@@ -46,8 +46,9 @@
 		<!--블록하운드-->
 		<dependency>
 			<groupId>io.projectreactor.tools</groupId>
-			<artifactId>blockhound</artifactId>
+			<artifactId>blockhound-junit-platform</artifactId>
 			<version>1.0.3.RELEASE</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -71,6 +72,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<layers>
+						<enabled>true</enabled>
+					</layers>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
