@@ -5,6 +5,7 @@ import com.springbootreactive.springbootreactive.domain.CartItem;
 import com.springbootreactive.springbootreactive.domain.Item;
 import com.springbootreactive.springbootreactive.repository.CartRepository;
 import com.springbootreactive.springbootreactive.repository.ItemRepository;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,9 +21,6 @@ public class InventoryService {
     public InventoryService(CartRepository cartRepository, ItemRepository itemRepository) {
         this.cartRepository = cartRepository;
         this.itemRepository = itemRepository;
-    }
-
-    public InventoryService() {
     }
 
     public Flux<Item> getInventory(){
