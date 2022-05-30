@@ -1,0 +1,10 @@
+= spring-boot-reactive
+
+다음 요청을 실행하면 :
+
+include::{snippets}/findAll/curl-request.adoc[]
+
+'ItemController'는 다음 응답 본문을 반환합니다.
+
+include::{snippets}/findALl/response-body.adoc[]
+
