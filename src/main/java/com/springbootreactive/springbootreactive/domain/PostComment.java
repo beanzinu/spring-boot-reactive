@@ -17,7 +17,7 @@ public class PostComment {
      }
 
      public PostSubComment addPostSubComment(PostSubComment postSubComment){
-          postSubCommentList.add(postSubComment);
+          this.postSubCommentList.add(postSubComment);
           return postSubComment;
      }
 

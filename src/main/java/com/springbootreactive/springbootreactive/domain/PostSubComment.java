@@ -1,9 +1,10 @@
 package com.springbootreactive.springbootreactive.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 public class PostSubComment {
-    private @Id String id;
+    private @MongoId String id;
     private String comment;
 
     public PostSubComment(String id, String comment) {

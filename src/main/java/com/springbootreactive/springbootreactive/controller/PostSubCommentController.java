@@ -28,55 +28,61 @@ public class PostSubCommentController {
     }
 
     @PostMapping("/api/postsubcomment")
-    public Mono<PostSubComment> registerPostSubComment(@RequestBody Mono<PostSubComment> postSubComment){
-                return postSubComment.flatMap( p -> postSubCommentRepository.save(p) )
-                .log("new PostSubComment")
-                .flatMap( p -> {
-                    // 임의의 PostComment 생성
-                    PostComment newPostComment = new PostComment("postComment1");
-                    newPostComment.addPostSubComment(p);
-                    return postCommentRepository.save(newPostComment);
-                })
-                .log("new PostComment")
-                .flatMap( postComment -> {
-                    // 임의의 Post 생성
-                    Post newPost = new Post("post1","제목","내용",new ArrayList<>());
-                    newPost.addPostComment(postComment);
-                    return postRepository.save(newPost);
-                })
-                .log("new Post")
-                .map( post -> {
-                    Optional<PostComment> findPostComment = post.getPostComments().stream().findAny();
-                    if( findPostComment.isPresent() ) {
-                        Optional<PostSubComment> findPostSubComment = findPostComment.get().getPostSubCommentList().stream().findAny();
-                        return findPostSubComment.get();
-                    }
-                    return new PostSubComment(null,null);
-                })
-                ;
+//    public Mono<?> registerPostSubComment(@RequestParam(name="id")String id, @RequestParam(name="comment")String comment){
+    public Mono<?> registerPostSubComment(@RequestBody Mono<PostSubComment> postSubCommentMono){
+        return postSubCommentMono.flatMap( p -> {
+                // Post 생성
+                return postRepository.findById("post1")
+                    .defaultIfEmpty(new Post("post1","post title","post content",new ArrayList<>()))
+                    .flatMap( post -> {
+                        // Post - PostComment 찾기
+
+                        PostComment findPostComment = post.getPostComments().stream().findAny()
+                                .orElseGet(() -> post.addPostComment(new PostComment("postComment1")));
+                        // PostComment.postSubCommentList - PostSubComment 추가
+                        findPostComment.addPostSubComment(new PostSubComment(p.getId(),p.getComment()));
+                        return postRepository.save(post);
+                });
+        });
 
 
-//        return postRepository.save(new Post("post1","제목","내용",new ArrayList<>()) )
-//                .log("new Post")
-//                .flatMap( post -> postCommentRepository.save( post.addPostComment(new PostComment("postComment1") ) ) )
-//                .log("new PostComment")
-//                .flatMap( postComment ->
-//                    postSubComment.flatMap( p -> {
+                // subComment -> postComment -> post 순서로 저장
+//                return postSubComment.map( p -> new PostSubComment(p.getId(),p.getComment()))
+//                .flatMap( p -> postSubCommentRepository.save(p))
+//                .log("new PostSubComment")
+//                .flatMap( p -> {
+//                    // 임의의 PostComment 생성
+//                    Mono<PostComment> findPostComment = postCommentRepository.findById("postComment1")
+//                            .defaultIfEmpty(new PostComment("postComment1"));
+//                    return findPostComment.flatMap( postComment -> {
 //                        postComment.addPostSubComment(p);
-//                        return postSubCommentRepository.save(new PostSubComment(p.getId(),p.getComment()));
-////                        return p;
-//                    })
-//                );
+//                        return postCommentRepository.save(postComment);
+//                    });
+//                })
+//                .log("new PostComment")
+//                .flatMap( postComment -> {
+//                    // 임의의 Post 생성
+//                    Mono<Post> findPost = postRepository.findById("post1")
+//                            .defaultIfEmpty(new Post("post1", "post title", "post content", new ArrayList<>()));
+//                    return findPost.flatMap( post -> {
+//                        post.addPostComment(postComment);
+//                        return postRepository.save(post);
+//                    });
+//                })
+//                .log("new Post")
+//                .flatMap( post -> postSubCommentRepository.findById("1"));
     }
 
     @GetMapping("/api/post")
     public Flux<Post> getPost(){
-        return postRepository.findAll().defaultIfEmpty(new Post(null,null,null,null));
+        return postRepository.findAll()
+                .defaultIfEmpty(new Post(null,null,null,null));
     }
 
     @GetMapping("/api/postsubcomment")
     public Flux<PostSubComment> getPostSubComments(){
-        return postSubCommentRepository.findAll().defaultIfEmpty(new PostSubComment(null,null));
+        return postSubCommentRepository.findAll()
+                .defaultIfEmpty(new PostSubComment(null,null));
     }
 
 
