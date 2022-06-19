@@ -1,22 +1,31 @@
 package com.springbootreactive.springbootreactive.domain;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.annotation.PersistenceConstructor;
+
 
 public class PostSubComment {
-    private @MongoId String id;
+    private @Id String id;
     private String comment;
 
-    public PostSubComment(String id, String comment) {
+    public PostSubComment(String comment) {
+        this.id = new ObjectId().toString();
+        this.comment = comment;
+    }
+
+    @PersistenceConstructor
+    protected PostSubComment(String id,String comment){
         this.id = id;
         this.comment = comment;
     }
 
+
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public String getComment() {
-        return comment;
+        return this.comment;
     }
 }

@@ -1,18 +1,22 @@
 package com.springbootreactive.springbootreactive.domain;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.processing.Generated;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PostComment {
 
-     private @Id String id;
+     @MongoId
+     private String id;
      private List<PostSubComment> postSubCommentList;
 
-     public PostComment(String id) {
-          this.id = id;
+     public PostComment() {
+          this.id = new ObjectId().toString();
           this.postSubCommentList = new ArrayList<>();
      }
 
@@ -22,10 +26,10 @@ public class PostComment {
      }
 
      public String getId() {
-          return id;
+          return this.id;
      }
 
      public List<PostSubComment> getPostSubCommentList() {
-          return postSubCommentList;
+          return this.postSubCommentList;
      }
 }
